@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fa-solid fa-hospital-user text-primary fs-1 mb-3"></i>
+                    <h2 class="h3 font-weight-bold">Acceso al Sistema</h2>
+                    <p class="text-secondary">Ingrese sus credenciales de Hospital Stock</p>
+                </div>
+                
+                <form method="post" autocomplete="off">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">
+                            <i class="fa-solid fa-user me-2 text-primary"></i>Usuario
+                        </label>
+                        <input type="text" name="username" autofocus required id="id_username" class="form-control" placeholder="Nombre de usuario">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label">
+                            <i class="fa-solid fa-lock me-2 text-primary"></i>Contraseña
+                        </label>
+                        <input type="password" name="password" required id="id_password" class="form-control" placeholder="••••••••">
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 py-2.5">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Entrar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Medicamentos Recuperados</h1>
+</div>
+
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <h3 class="mb-4"><i class="fa-solid fa-rotate-left text-primary me-2"></i>Medicamentos listos para reingreso</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                        <th>Móvil de origen</th>
+                        <th>Fecha de registro</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recuperados %}
+                        <tr>
+                            <td><strong>{{ item.medicamento.nombre }}</strong></td>
+                            <td><span class="badge bg-success">{{ item.cantidad }} unidades</span></td>
+                            <td>
+                                {% if item.movil_origen %}
+                                    <span class="text-info"><i class="fa-solid fa-truck-medical me-1"></i>{{ item.movil_origen.nombre }}</span>
+                                {% else %}
+                                    <span class="text-secondary">Desconocido</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.fecha|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if can_modify_stock %}
+                                    <a class="btn btn-sm btn-success" href="{% url 'agregar_desde_recuperados' item.pk %}">
+                                        <i class="fa-solid fa-truck-arrow-right me-1"></i> Agregar a móvil
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-secondary py-4">No hay recuperados registrados en este momento.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

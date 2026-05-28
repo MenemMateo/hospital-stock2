@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Detalle de {{ movil.nombre }}</h1>
+    {% if can_modify_stock %}
+    <div>
+        <a href="{% url 'transferir_stock' movil.pk %}" class="btn btn-success me-2">
+            <i class="fa-solid fa-right-left me-2"></i>Transferir stock
+        </a>
+        <a href="{% url 'ajustar_stock' movil.pk %}" class="btn btn-warning text-white">
+            <i class="fa-solid fa-sliders me-2"></i>Ajustar stock
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <h3 class="mb-4"><i class="fa-solid fa-truck-medical text-primary me-2"></i>Stock actual del móvil</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                        <th>Vencimiento</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in stock_items %}
+                        <tr class="{% if item.es_vencido %}table-danger{% elif item.vence_pronto or item.cantidad < item.low_stock_threshold %}table-warning{% else %}table-success{% endif %}">
+                            <td>
+                                <a href="{% url 'edit_stock_item' item.pk %}" class="text-white text-decoration-none">
+                                    <strong>{{ item.medicamento.nombre }}</strong>
+                                </a>
+                            </td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>
+                                {% if item.alerta == 'Vencido' %}
+                                    <span class="badge bg-danger">Vencido</span>
+                                {% elif item.alerta == 'Alerta' %}
+                                    <span class="badge bg-warning text-dark">Alerta</span>
+                                {% else %}
+                                    <span class="badge bg-success">OK</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.fecha_vencimiento }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary me-1" href="{% url 'edit_stock_item' item.pk %}">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i> Editar
+                                </a>
+                                {% if item.es_vencido %}
+                                    <a class="btn btn-sm btn-danger animate-pulse" href="{% url 'descartar_stock_item' item.pk %}">
+                                        <i class="fa-solid fa-trash me-1"></i> Descartar
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-secondary py-4">No hay stock registrado en este móvil.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

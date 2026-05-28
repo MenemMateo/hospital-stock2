@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Modificar stock: {{ stock.medicamento.nombre }}</h1>
+        </div>
+        
+        <!-- Info Card -->
+        <div class="card mb-4">
+            <div class="card-body p-4 d-flex justify-content-around align-items-center text-center">
+                <div>
+                    <span class="text-secondary d-block mb-1">Móvil</span>
+                    <strong class="fs-5"><i class="fa-solid fa-truck-medical text-primary me-2"></i>{{ stock.movil.nombre }}</strong>
+                </div>
+                <div class="vr bg-secondary" style="height: 40px; opacity: 0.25;"></div>
+                <div>
+                    <span class="text-secondary d-block mb-1">Cantidad actual</span>
+                    <strong class="fs-5 text-success">{{ stock.cantidad }} unidades</strong>
+                </div>
+                <div class="vr bg-secondary" style="height: 40px; opacity: 0.25;"></div>
+                <div>
+                    <span class="text-secondary d-block mb-1">Vencimiento</span>
+                    <strong class="fs-5 text-info"><i class="fa-solid fa-calendar text-primary me-2"></i>{{ stock.fecha_vencimiento }}</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Form Card -->
+        <div class="card p-4">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="fa-solid fa-circle-xmark me-2"></i>
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Acción -->
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">Acción a realizar</label>
+                        {{ form.action }}
+                        {% for error in form.action.errors %}
+                            <div class="text-danger mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Cantidad -->
+                    <div class="mb-4">
+                        <label class="form-label" for="id_cantidad">Cantidad</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-boxes-stacked text-primary"></i></span>
+                            {{ form.cantidad }}
+                        </div>
+                        {% for error in form.cantidad.errors %}
+                            <div class="text-danger mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Origen -->
+                    <div class="mb-4" id="origenContainer">
+                        <label class="form-label" for="id_origen">Origen del stock</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-right-to-bracket text-primary"></i></span>
+                            {{ form.origen }}
+                        </div>
+                        {% for error in form.origen.errors %}
+                            <div class="text-danger mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Enviar a recuperados -->
+                    <div class="mb-4" id="recuperadoContainer" style="display: none;">
+                        <div class="form-check form-switch p-0 ps-5 fs-5">
+                            {{ form.enviar_recuperado }}
+                            <label class="form-check-label ms-2" for="id_enviar_recuperado">
+                                ¿Enviar sobrante a recuperados?
+                            </label>
+                        </div>
+                        {% for error in form.enviar_recuperado.errors %}
+                            <div class="text-danger mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="d-flex gap-2 mt-5">
+                        <button class="btn btn-primary px-4">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Guardar
+                        </button>
+                        <a href="{% url 'movil_detail' stock.movil.pk %}" class="btn btn-secondary px-4">
+                            <i class="fa-solid fa-xmark me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const actionRadios = document.getElementsByName('action');
+    const origenContainer = document.getElementById('origenContainer');
+    const recuperadoContainer = document.getElementById('recuperadoContainer');
+    
+    function toggleContainers() {
+        let selectedAction = '';
+        for (let radio of actionRadios) {
+            if (radio.checked) {
+                selectedAction = radio.value;
+                break;
+            }
+        }
+        
+        if (selectedAction === 'add') {
+            origenContainer.style.display = 'block';
+            recuperadoContainer.style.display = 'none';
+        } else {
+            origenContainer.style.display = 'none';
+            recuperadoContainer.style.display = 'block';
+        }
+    }
+    
+    // Asignar escuchador de eventos a cada radio button
+    for (let radio of actionRadios) {
+        radio.addEventListener('change', toggleContainers);
+    }
+    
+    // Ejecutar inicialmente
+    toggleContainers();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Inventario general</h1>
+    {% if can_modify_stock %}
+    <div>
+        <a class="btn btn-primary me-2" href="{% url 'add_medicamento' %}">
+            <i class="fa-solid fa-plus me-2"></i>Agregar medicamento
+        </a>
+        <a class="btn btn-secondary" href="{% url 'add_inventario' %}">
+            <i class="fa-solid fa-boxes-stacked me-2"></i>Agregar inventario
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Medicamentos y precios -->
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <h3 class="mb-4"><i class="fa-solid fa-pills text-primary me-2"></i>Medicamentos y precios</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Precio unitario</th>
+                        {% if can_modify_stock %}
+                        <th>Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for medicamento in medicamentos %}
+                        <tr class="{% if not medicamento.precio_unitario %}table-warning{% endif %}">
+                            <td><strong>{{ medicamento.nombre }}</strong></td>
+                            <td>{{ medicamento.precio_formateado }}</td>
+                            {% if can_modify_stock %}
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'editar_precio' medicamento.pk %}">
+                                    <i class="fa-solid fa-tag me-1"></i> Editar precio
+                                </a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="{% if can_modify_stock %}3{% else %}2{% endif %}" class="text-center text-secondary">No hay medicamentos registrados.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if medicamentos_sin_precio %}
+            <div class="alert alert-warning mt-4 mb-0">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                <strong>Advertencia:</strong> Los siguientes medicamentos no tienen precio definido: 
+                {% for med in medicamentos_sin_precio %}<span class="badge bg-warning text-dark">{{ med.nombre }}</span>{% if not forloop.last %} {% endif %}{% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Inventario por fecha de vencimiento -->
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <h3 class="mb-4"><i class="fa-solid fa-calendar-days text-primary me-2"></i>Inventario por fecha de vencimiento</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                        <th>Vencimiento</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventario %}
+                        <tr class="{% if item.es_vencido %}table-danger{% elif item.vence_pronto or item.cantidad < item.low_stock_threshold %}table-warning{% else %}table-success{% endif %}">
+                            <td><strong>{{ item.medicamento.nombre }}</strong></td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.fecha_vencimiento }}</td>
+                            <td>
+                                {% if item.alert_label == 'Vencido' %}
+                                    <span class="badge bg-danger">Vencido</span>
+                                {% elif item.alert_label == 'Próximo' %}
+                                    <span class="badge bg-warning text-dark">Próximo a vencer</span>
+                                {% elif item.alert_label == 'Bajo' %}
+                                    <span class="badge bg-warning text-dark">Bajo Stock</span>
+                                {% else %}
+                                    <span class="badge bg-success">OK</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="4" class="text-center text-secondary">No hay inventario registrado.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

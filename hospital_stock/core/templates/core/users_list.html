@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Administración de Usuarios</h1>
+    <a class="btn btn-success" href="{% url 'create_user' %}">
+        <i class="fa-solid fa-user-plus me-2"></i>Crear usuario
+    </a>
+</div>
+
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <h3 class="mb-4"><i class="fa-solid fa-users-gear text-primary me-2"></i>Usuarios registrados</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de usuario</th>
+                        <th>Rol</th>
+                        <th>Tipo de cuenta</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>
+                                <strong>{{ u.username }}</strong>
+                                {% if u == request.user %}
+                                    <span class="badge bg-primary ms-2"><i class="fa-solid fa-user-check me-1"></i>Tú</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.role == 'Superuser' %}
+                                    <span class="badge bg-danger"><i class="fa-solid fa-shield-halved me-1"></i>Superusuario</span>
+                                {% elif u.role == 'Empleado' %}
+                                    <span class="badge bg-success"><i class="fa-solid fa-user-tie me-1"></i>Empleado</span>
+                                {% elif u.role == 'Espectador' %}
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-eye me-1"></i>Espectador</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Sin Rol</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.is_superuser %}
+                                    <span class="text-danger font-weight-bold">Administrador del sistema</span>
+                                {% else %}
+                                    <span class="text-secondary">Usuario estándar</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-info text-white me-1" href="{% url 'profile_detail' u.pk %}">
+                                    <i class="fa-solid fa-id-card me-1"></i> Perfil
+                                </a>
+                                {% if u != request.user %}
+                                    <a class="btn btn-sm btn-danger" href="{% url 'delete_user' u.pk %}">
+                                        <i class="fa-solid fa-user-minus me-1"></i> Eliminar
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-secondary py-4">No hay otros usuarios registrados en el sistema.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
