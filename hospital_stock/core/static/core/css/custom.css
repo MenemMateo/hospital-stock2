@@ -28,7 +28,7 @@
 }
 
 /* Color Variables for Dark Theme */
-body.dark-theme {
+.dark-theme {
     --bg-color: #0f172a;
     --card-bg: #1e293b;
     --card-border: #334155;
