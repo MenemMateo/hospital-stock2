@@ -19,25 +19,25 @@
         <h3 class="mb-4"><i class="fa-solid fa-truck-medical text-primary me-2"></i>Stock actual del móvil</h3>
         
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Medicamento</th>
                         <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Vencimiento</th>
-                        <th>Acción</th>
+                        <th>Acción rápida</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in stock_items %}
                         <tr class="{% if item.es_vencido %}table-danger{% elif item.vence_pronto or item.cantidad < item.low_stock_threshold %}table-warning{% else %}table-success{% endif %}">
                             <td>
-                                <a href="{% url 'edit_stock_item' item.pk %}" class="text-white text-decoration-none">
-                                    <strong>{{ item.medicamento.nombre }}</strong>
-                                </a>
+                                <strong>{{ item.medicamento.nombre }}</strong>
                             </td>
-                            <td>{{ item.cantidad }}</td>
+                            <td>
+                                <span class="fs-5 font-weight-bold">{{ item.cantidad }}</span>
+                            </td>
                             <td>
                                 {% if item.alerta == 'Vencido' %}
                                     <span class="badge bg-danger">Vencido</span>
@@ -49,13 +49,48 @@
                             </td>
                             <td>{{ item.fecha_vencimiento }}</td>
                             <td>
-                                <a class="btn btn-sm btn-outline-primary me-1" href="{% url 'edit_stock_item' item.pk %}">
-                                    <i class="fa-solid fa-pen-to-square me-1"></i> Editar
-                                </a>
-                                {% if item.es_vencido %}
-                                    <a class="btn btn-sm btn-danger animate-pulse" href="{% url 'descartar_stock_item' item.pk %}">
-                                        <i class="fa-solid fa-trash me-1"></i> Descartar
-                                    </a>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#consume-{{ item.pk }}" aria-expanded="false">
+                                        <i class="fa-solid fa-hand-holding-medical me-1"></i> Consumir
+                                    </button>
+                                    
+                                    {% if can_modify_stock %}
+                                        <button class="btn btn-sm btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#remodel-{{ item.pk }}" aria-expanded="false">
+                                            <i class="fa-solid fa-truck-ramp-box me-1"></i> Reponer
+                                        </button>
+                                        
+                                        <a class="btn btn-sm btn-secondary" href="{% url 'edit_stock_item' item.pk %}" title="Ajustar / Editar">
+                                            <i class="fa-solid fa-sliders"></i>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    {% if item.es_vencido %}
+                                        <a class="btn btn-sm btn-danger animate-pulse" href="{% url 'descartar_stock_item' item.pk %}" title="Descartar lote vencido">
+                                            <i class="fa-solid fa-trash me-1"></i> Descartar
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Formulario inline de Consumir -->
+                                <div class="collapse" id="consume-{{ item.pk }}">
+                                    <form method="post" action="{% url 'consumir_stock_item' item.pk %}" class="d-flex align-items-center gap-2 mt-2 p-2 rounded bg-light border border-primary-subtle" style="max-width: 450px;">
+                                        {% csrf_token %}
+                                        <input type="number" name="cantidad" min="1" max="{{ item.cantidad }}" class="form-control form-control-sm" placeholder="Cant" style="width: 80px;" required>
+                                        <input type="text" name="motivo" class="form-control form-control-sm" placeholder="Motivo (opcional)" style="font-size: 0.85rem;">
+                                        <button class="btn btn-sm btn-primary px-3 py-1">Ok</button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Formulario inline de Reponer -->
+                                {% if can_modify_stock %}
+                                    <div class="collapse" id="remodel-{{ item.pk }}">
+                                        <form method="post" action="{% url 'reponer_stock_item' item.pk %}" class="d-flex align-items-center gap-2 mt-2 p-2 rounded bg-light border border-success-subtle" style="max-width: 450px;">
+                                            {% csrf_token %}
+                                            <input type="number" name="cantidad" min="1" class="form-control form-control-sm" placeholder="Cant" style="width: 80px;" required>
+                                            <button class="btn btn-sm btn-success px-3 py-1 text-white">Ok</button>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Mueve del inventario</small>
+                                        </form>
+                                    </div>
                                 {% endif %}
                             </td>
                         </tr>

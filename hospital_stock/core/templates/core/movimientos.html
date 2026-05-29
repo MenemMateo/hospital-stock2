@@ -12,38 +12,59 @@
         <tr>
             <th>Fecha</th>
             <th>Tipo</th>
-            <th>Medicamento</th>
-            <th>Cantidad</th>
-            <th>Móvil</th>
-            <th>Descripción</th>
-            <th>Usuario</th>
+            <th>Operación (Auditoría)</th>
+            <th>Descripción Técnica</th>
         </tr>
     </thead>
     <tbody>
         {% for movimiento in movimientos %}
             <tr>
-                <td>{{ movimiento.fecha }}</td>
-                <td>{{ movimiento.get_tipo_display }}</td>
-                <td>{{ movimiento.medicamento.nombre }}</td>
-                <td>{{ movimiento.cantidad }}</td>
+                <td>{{ movimiento.fecha|date:"d/m/Y H:i" }}</td>
                 <td>
-                    {% if movimiento.movil %}
-                        {{ movimiento.movil.nombre }}
+                    {% if movimiento.tipo == 'entrada' %}
+                        <span class="badge bg-success"><i class="fa-solid fa-circle-arrow-down me-1"></i>Entrada</span>
+                    {% elif movimiento.tipo == 'salida' %}
+                        <span class="badge bg-danger"><i class="fa-solid fa-circle-arrow-up me-1"></i>Salida</span>
+                    {% elif movimiento.tipo == 'ajuste' %}
+                        <span class="badge bg-warning text-dark"><i class="fa-solid fa-sliders me-1"></i>Ajuste</span>
                     {% else %}
-                        Inventario
+                        <span class="badge bg-info text-white"><i class="fa-solid fa-rotate-left me-1"></i>Recuperado</span>
                     {% endif %}
                 </td>
-                <td>{{ movimiento.descripcion }}</td>
                 <td>
                     {% if movimiento.usuario %}
                         <strong>{{ movimiento.usuario.username }}</strong>
                     {% else %}
                         <span class="text-muted"><i class="fa-solid fa-robot me-1"></i>Sistema</span>
                     {% endif %}
+                    
+                    {% if movimiento.tipo == 'entrada' %}
+                        transfirió / ingresó
+                    {% elif movimiento.tipo == 'salida' %}
+                        consumió / retiró
+                    {% elif movimiento.tipo == 'ajuste' %}
+                        ajustó
+                    {% else %}
+                        recuperó
+                    {% endif %}
+                    
+                    <span class="fs-6 font-weight-bold">{{ movimiento.cantidad }}</span> unidades de 
+                    <strong>{{ movimiento.medicamento.nombre }}</strong> 
+                    en 
+                    <strong>
+                        {% if movimiento.movil %}
+                            {{ movimiento.movil.nombre }}
+                        {% else %}
+                            Inventario
+                        {% endif %}
+                    </strong>
+                </td>
+                <td>
+                    <span class="text-secondary small">{{ movimiento.descripcion }}</span>
                 </td>
             </tr>
         {% empty %}
-            <tr><td colspan="7">No hay movimientos registrados.</td></tr>
+            <tr><td colspan="4" class="text-center text-secondary py-4">No hay movimientos registrados.</td></tr>
         {% endfor %}
     </tbody>
 </table>
