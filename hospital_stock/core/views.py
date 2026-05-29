@@ -681,3 +681,43 @@ def actualizar_limites_gastos(request):
         config.save()
     
     return redirect('gastos_list')
+
+
+@login_required
+@group_required(['Empleado'])
+@no_spectador_post
+def consumir_stock_item(request, pk):
+    stock = get_object_or_404(StockMovil, pk=pk)
+    if request.method == 'POST':
+        cantidad_str = request.POST.get('cantidad', '0')
+        motivo = request.POST.get('motivo', '').strip()
+        try:
+            cantidad = int(cantidad_str)
+            from .services import consumir_stock
+            consumir_stock(stock, cantidad, motivo=motivo, usuario=request.user)
+            messages.success(request, f'Se consumieron {cantidad} unidades de {stock.medicamento.nombre} correctamente.')
+        except (ValueError, ValidationError) as e:
+            messages.error(request, f'Error al consumir: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Ocurrió un error inesperado: {str(e)}')
+    return redirect('movil_detail', pk=stock.movil.pk)
+
+
+@login_required
+@group_required(['Empleado'])
+@no_spectador_post
+def reponer_stock_item(request, pk):
+    stock = get_object_or_404(StockMovil, pk=pk)
+    if request.method == 'POST':
+        cantidad_str = request.POST.get('cantidad', '0')
+        try:
+            cantidad = int(cantidad_str)
+            from .services import reponer_stock
+            reponer_stock(stock, cantidad, usuario=request.user)
+            messages.success(request, f'Se repusieron {cantidad} unidades de {stock.medicamento.nombre} correctamente.')
+        except (ValueError, ValidationError) as e:
+            messages.error(request, f'Error al reponer: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Ocurrió un error inesperado: {str(e)}')
+    return redirect('movil_detail', pk=stock.movil.pk)
+

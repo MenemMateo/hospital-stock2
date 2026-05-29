@@ -293,3 +293,66 @@ def agregar_stock_desde_recuperados(stock, cantidad, recuperado, usuario=None):
             usuario=usuario,
         )
         return stock
+
+
+def consumir_stock(stock, cantidad, motivo='', usuario=None):
+    """Resta cantidad del stock de un móvil y registra el consumo en el historial."""
+    if cantidad <= 0:
+        raise ValidationError('La cantidad a consumir debe ser mayor que cero.')
+    if stock.cantidad < cantidad:
+        raise ValidationError(f'No hay suficiente cantidad en el móvil. Disponible: {stock.cantidad}')
+
+    with transaction.atomic():
+        stock.cantidad -= cantidad
+        stock.full_clean()
+        stock.save()
+
+        # Si el motivo es vacío, generar uno por defecto descriptivo
+        descripcion_movimiento = f'Consumo de {cantidad} unidades de {stock.medicamento.nombre} en {stock.movil.nombre}'
+        if motivo:
+            descripcion_movimiento += f' - Motivo: {motivo}'
+
+        log_movimiento(
+            tipo='salida',
+            medicamento=stock.medicamento,
+            cantidad=cantidad,
+            movil=stock.movil,
+            descripcion=descripcion_movimiento,
+            usuario=usuario,
+        )
+        return stock
+
+
+def reponer_stock(stock, cantidad, usuario=None):
+    """Mueve cantidad de stock del inventario hacia el móvil para el mismo lote/vencimiento."""
+    if cantidad <= 0:
+        raise ValidationError('La cantidad a reponer debe ser mayor que cero.')
+
+    with transaction.atomic():
+        # Buscar stock en inventario general con la misma fecha de vencimiento y medicamento
+        inventario = Inventario.objects.filter(
+            medicamento=stock.medicamento,
+            fecha_vencimiento=stock.fecha_vencimiento
+        ).first()
+
+        if not inventario or inventario.cantidad < cantidad:
+            raise ValidationError(f'No hay suficiente stock en inventario con la misma fecha de vencimiento ({stock.fecha_vencimiento}) para reponer.')
+
+        inventario.cantidad -= cantidad
+        inventario.full_clean()
+        inventario.save()
+
+        stock.cantidad += cantidad
+        stock.full_clean()
+        stock.save()
+
+        log_movimiento(
+            tipo='entrada',
+            medicamento=stock.medicamento,
+            cantidad=cantidad,
+            movil=stock.movil,
+            descripcion=f'Reposición rápida desde inventario a {stock.movil.nombre}',
+            usuario=usuario,
+        )
+        return stock
+

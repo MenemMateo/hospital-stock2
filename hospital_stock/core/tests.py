@@ -93,3 +93,44 @@ class UserProfileAndMovementTests(TestCase):
         # Access Juan's profile as superuser -> Should succeed (200)
         response = self.client.get(f'/perfil/{self.other_user.pk}/')
         self.assertEqual(response.status_code, 200)
+
+    def test_consumir_stock_service(self):
+        """Verify that consuming stock works and records the user"""
+        from core.services import consumir_stock
+        stock = StockMovil.objects.create(
+            movil=self.movil,
+            medicamento=self.medicamento,
+            cantidad=30,
+            fecha_vencimiento=self.fecha_venc
+        )
+        
+        consumir_stock(stock, 10, motivo="Paciente critico", usuario=self.regular_user)
+        
+        # Verify stock subtraction
+        stock.refresh_from_db()
+        self.assertEqual(stock.cantidad, 20)
+        
+        # Verify movement logging
+        mov = Movimiento.objects.filter(tipo='salida', medicamento=self.medicamento).first()
+        self.assertIsNotNone(mov)
+        self.assertEqual(mov.usuario, self.regular_user)
+        self.assertIn("Paciente critico", mov.descripcion)
+
+    def test_reponer_stock_service(self):
+        """Verify that replenishing stock from inventory general works"""
+        from core.services import reponer_stock
+        stock = StockMovil.objects.create(
+            movil=self.movil,
+            medicamento=self.medicamento,
+            cantidad=5,
+            fecha_vencimiento=self.fecha_venc
+        )
+        
+        reponer_stock(stock, 20, usuario=self.regular_user)
+        
+        # Verify inventory subtraction and mobile addition
+        self.inventario.refresh_from_db()
+        stock.refresh_from_db()
+        self.assertEqual(self.inventario.cantidad, 80)
+        self.assertEqual(stock.cantidad, 25)
+
