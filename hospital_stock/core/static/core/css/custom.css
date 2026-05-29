@@ -1,208 +1,205 @@
 /* ==========================================================================
-   HOSPITAL STOCK - PREMIUM VISUAL DESIGN SYSTEM
+   HOSPITAL STOCK - MINIMALIST MEDICAL DESIGN SYSTEM
    ========================================================================== */
 
-/* Custom Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
+/* Color Variables for Light Theme (Default) */
 :root {
-    --primary-color: #6366f1; /* Indigo */
-    --primary-hover: #4f46e5;
-    --secondary-color: #3b82f6; /* Blue */
-    --success-color: #10b981; /* Emerald */
-    --warning-color: #f59e0b; /* Amber */
-    --danger-color: #ef4444; /* Rose */
-    --background-dark: #0f172a; /* Slate 900 */
-    --card-bg: rgba(255, 255, 255, 0.07);
-    --card-border: rgba(255, 255, 255, 0.12);
-    --glass-blur: blur(12px);
+    --bg-color: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --navbar-bg: #ffffff;
+    --navbar-text: #334155;
+    
+    --primary-color: #0d9488; /* Teal Médico */
+    --primary-hover: #0f766e;
+    --secondary-color: #0284c7; /* Cian */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    
+    --table-header-bg: #f8fafc;
+    --bg-light: #f8fafc;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+}
+
+/* Color Variables for Dark Theme */
+body.dark-theme {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --navbar-bg: #1e293b;
+    --navbar-text: #cbd5e1;
+    
+    --primary-color: #2dd4bf;
+    --primary-hover: #14b8a6;
+    --secondary-color: #38bdf8;
+    
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
+    
+    --table-header-bg: #1e293b;
+    --bg-light: #0f172a;
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }
 
-/* Base Body Styles with a Deep, Elegant Gradient Background */
+/* Base Body Styles */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(135deg, #090d16 0%, #111827 50%, #0f172a 100%);
-    background-attachment: fixed;
+    background-color: var(--bg-color);
     color: var(--text-primary);
     min-height: 100vh;
-    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Headers with Outfit font for a premium, clean look */
+/* Headers style */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 h1 {
-    font-size: 2.25rem;
-    background: linear-gradient(to right, #ffffff, #93c5fd, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
 }
 
-/* Glassmorphism Cards */
+/* Medical Premium Cards */
 .card, .form-container, .table-container {
-    background: var(--card-bg) !important;
-    backdrop-filter: var(--glass-blur) !important;
-    -webkit-backdrop-filter: var(--glass-blur) !important;
+    background-color: var(--card-bg) !important;
     border: 1px solid var(--card-border) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease !important;
 }
 
 .card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15) !important;
-}
-
-/* Customize Mobile border states elegantly */
-.card.border-success {
-    border-left: 5px solid var(--success-color) !important;
-}
-.card.border-warning {
-    border-left: 5px solid var(--warning-color) !important;
-}
-.card.border-danger {
-    border-left: 5px solid var(--danger-color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08) !important;
 }
 
 .card-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
-/* Premium Floating Navbar Styling */
+/* Floating Navbar Styling */
 .navbar {
-    background: rgba(15, 23, 42, 0.6) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background-color: var(--navbar-bg) !important;
     border-bottom: 1px solid var(--card-border);
-    padding: 0.9rem 1.5rem;
-    margin-bottom: 2.5rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    transition: background-color 0.3s ease, border-bottom 0.3s ease;
 }
 
 .navbar-brand {
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, #a78bfa 0%, #6366f1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 1.4rem;
+    color: var(--primary-color) !important;
     letter-spacing: -0.03em;
 }
 
 .navbar-nav .nav-link {
     font-weight: 500;
     color: var(--text-secondary) !important;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
     padding: 0.5rem 1rem !important;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .navbar-nav .nav-link:hover, 
 .navbar-nav .nav-link.active {
-    color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary-color) !important;
+    background-color: var(--bg-light);
 }
 
 /* Premium Buttons Styling */
 .btn {
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    padding: 0.6rem 1.4rem !important;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    padding: 0.5rem 1.2rem !important;
+    transition: all 0.2s ease !important;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+    background-color: var(--primary-color) !important;
     border: none !important;
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+    color: #ffffff !important;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45) !important;
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-1px);
 }
 
 .btn-success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    background-color: var(--success-color) !important;
     border: none !important;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
 }
 
 .btn-success:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+    background-color: #059669 !important;
+    transform: translateY(-1px);
 }
 
 .btn-warning {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    background-color: var(--warning-color) !important;
     border: none !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3) !important;
 }
 
 .btn-warning:hover {
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
-    transform: scale(1.02);
+    background-color: #d97706 !important;
     color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45) !important;
+    transform: translateY(-1px);
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    background-color: var(--danger-color) !important;
     border: none !important;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
 }
 
 .btn-danger:hover {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45) !important;
+    background-color: #dc2626 !important;
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background-color: var(--bg-light) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--card-border) !important;
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.18) !important;
-    transform: scale(1.02);
+    background-color: var(--card-border) !important;
 }
 
 .btn-outline-primary {
-    border: 1px solid rgba(99, 102, 241, 0.5) !important;
-    color: #818cf8 !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
 }
 
 .btn-outline-primary:hover {
-    background: rgba(99, 102, 241, 0.15) !important;
+    background-color: var(--primary-color) !important;
     color: #ffffff !important;
 }
 
-/* Beautiful Translucent Glass Tables */
+/* Clean Medical Tables */
 .table,
 .table > :not(caption) > * > * {
     color: var(--text-primary) !important;
     background-color: transparent !important;
-    border-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--card-border) !important;
 }
 
 .table th,
@@ -210,249 +207,132 @@ h1 {
 .table > :not(caption) > thead > * > * {
     font-family: 'Outfit', sans-serif;
     font-weight: 600;
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.08) !important; /* Capa sutil translúcida en encabezados */
-    border-bottom: 2px solid rgba(255, 255, 255, 0.18) !important;
-    padding: 1rem 0.75rem !important;
+    color: var(--text-primary) !important;
+    background-color: var(--table-header-bg) !important;
+    border-bottom: 2px solid var(--card-border) !important;
+    padding: 0.75rem 0.5rem !important;
 }
 
 .table td,
 .table > tbody > tr > td {
-    padding: 0.95rem 0.75rem !important;
-    background-color: transparent !important;
-    color: var(--text-primary) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 0.75rem 0.5rem !important;
+    border-bottom: 1px solid var(--card-border) !important;
     vertical-align: middle !important;
 }
 
 .table-hover tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.04) !important;
-    transition: background-color 0.25s ease !important;
+    background-color: var(--bg-light) !important;
 }
 
 /* Table Row Highlights for Alerts */
 .table-danger {
-    background-color: rgba(239, 68, 68, 0.15) !important;
-    color: #fca5a5 !important;
+    background-color: rgba(239, 68, 68, 0.08) !important;
 }
 .table-warning {
-    background-color: rgba(245, 158, 11, 0.15) !important;
-    color: #fde047 !important;
+    background-color: rgba(245, 158, 11, 0.08) !important;
 }
 .table-success {
-    background-color: rgba(16, 185, 129, 0.12) !important;
-    color: #a7f3d0 !important;
+    background-color: rgba(16, 185, 129, 0.06) !important;
 }
 
-/* Custom Translucent Inputs & Form Controls (Global and Class-based) */
+/* Translucent Inputs & Form Controls */
 .form-control, .form-select, 
 input[type="text"], input[type="number"], input[type="password"], input[type="date"], input[type="email"],
 select, textarea {
-    background: rgba(0, 0, 0, 0.35) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
-    border-radius: 10px !important;
-    padding: 0.65rem 1rem !important;
-    transition: all 0.3s ease !important;
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+    padding: 0.5rem 0.75rem !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .form-control:focus, .form-select:focus,
 input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[type="email"]:focus,
 select:focus, textarea:focus {
-    background: rgba(0, 0, 0, 0.5) !important;
     border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25) !important;
-    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15) !important;
     outline: none !important;
 }
 
 .form-control::placeholder, input::placeholder, textarea::placeholder {
-    color: #64748b !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.6;
 }
 
-/* Dropdown list for Select Option Styling (Global and Class-based) */
 .form-select option, select option {
-    background-color: #111827 !important;
-    color: #ffffff !important;
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
 }
 
 .form-label, label {
     font-weight: 500;
-    color: #e2e8f0 !important;
-    margin-bottom: 0.5rem;
-}
-
-/* Radio buttons list, checkboxes lists & lists in forms styling */
-form ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 0.5rem;
-}
-
-form ul li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #f8fafc !important;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-}
-
-form ul li label {
-    margin-bottom: 0 !important;
-    cursor: pointer;
-}
-
-form input[type="radio"], form input[type="checkbox"] {
-    width: 1.15rem;
-    height: 1.15rem;
-    accent-color: var(--primary-color);
-    cursor: pointer;
-}
-
-/* Alerts custom styling */
-.alert {
-    border-radius: 12px !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    font-weight: 500;
-}
-
-.alert-danger {
-    background-color: rgba(239, 68, 68, 0.15) !important;
-    color: #fca5a5 !important;
-    border-color: rgba(239, 68, 68, 0.25) !important;
-}
-
-.alert-warning {
-    background-color: rgba(245, 158, 11, 0.15) !important;
-    color: #fde047 !important;
-    border-color: rgba(245, 158, 11, 0.25) !important;
-}
-
-.alert-success {
-    background-color: rgba(16, 185, 129, 0.15) !important;
-    color: #a7f3d0 !important;
-    border-color: rgba(16, 185, 129, 0.25) !important;
-}
-
-/* Tabs Styling */
-.nav-tabs {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.nav-tabs .nav-link {
-    color: var(--text-secondary) !important;
-    font-weight: 600;
-    border: none !important;
-    border-bottom: 3px solid transparent !important;
-    padding: 0.75rem 1.25rem !important;
-    transition: all 0.3s ease !important;
-}
-
-.nav-tabs .nav-link:hover {
-    color: #ffffff !important;
-    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-.nav-tabs .nav-link.active {
-    background: transparent !important;
-    color: #ffffff !important;
-    border-bottom-color: var(--primary-color) !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.25rem;
 }
 
 /* Badges styling */
 .badge {
-    padding: 0.45em 0.85em !important;
+    padding: 0.35em 0.65em !important;
     font-weight: 600 !important;
-    border-radius: 6px !important;
+    border-radius: 4px !important;
 }
 
 .bg-success {
-    background: rgba(16, 185, 129, 0.2) !important;
-    color: #34d399 !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #059669 !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
 }
 
 .bg-warning {
-    background: rgba(245, 158, 11, 0.2) !important;
-    color: #fbbf24 !important;
-    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    background: rgba(245, 158, 11, 0.1) !important;
+    color: #d97706 !important;
+    border: 1px solid rgba(245, 158, 11, 0.2) !important;
 }
 
 .bg-danger {
-    background: rgba(239, 68, 68, 0.2) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+    border: 1px solid rgba(239, 68, 68, 0.2) !important;
 }
 
-/* Input group styling */
-.input-group-text {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #e2e8f0 !important;
-    border-radius: 10px;
-}
-
-/* Scrollbar Customization for modern browsers */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #475569;
-}
-
-/* Perfect alignment for username in the navbar */
-.navbar-text {
-    color: #ffffff !important;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-}
-
-/* Beautiful High-Contrast Alerts and highly visible Close X Button */
+/* Alerts */
 .alert {
-    position: relative;
-    padding-right: 3rem !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--card-border) !important;
+    font-weight: 500;
 }
 
+/* High Contrast Alert Close Button */
 .alert .btn-close {
-    filter: invert(1) grayscale(1) brightness(2) !important; /* Force close cross to be clean white and highly visible */
-    opacity: 0.8 !important;
-    padding: 1.25rem 1.25rem !important;
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    transition: opacity 0.2s ease !important;
+    opacity: 0.6 !important;
 }
-
 .alert .btn-close:hover {
     opacity: 1 !important;
 }
 
-.alert-danger .alert-link {
-    color: #ffffff !important;
-    text-decoration: underline;
-    font-weight: 700 !important;
+/* Theme Switcher Button */
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.alert-warning .alert-link {
-    color: #1e293b !important;
-    text-decoration: underline;
-    font-weight: 700 !important;
+.theme-toggle-btn:hover {
+    background-color: var(--bg-light);
+    color: var(--primary-color);
+}
+
+.bg-light, .p-3.bg-light {
+    background-color: var(--bg-light) !important;
 }
