@@ -134,3 +134,16 @@ class UserProfileAndMovementTests(TestCase):
         self.assertEqual(self.inventario.cantidad, 80)
         self.assertEqual(stock.cantidad, 25)
 
+    def test_consumir_stock_completo_deletes_object(self):
+        """Verify that consuming all stock deletes the StockMovil record"""
+        from core.services import consumir_stock
+        stock = StockMovil.objects.create(
+            movil=self.movil,
+            medicamento=self.medicamento,
+            cantidad=10,
+            fecha_vencimiento=self.fecha_venc
+        )
+        consumir_stock(stock, 10, usuario=self.regular_user)
+        self.assertFalse(StockMovil.objects.filter(pk=stock.pk).exists())
+
+

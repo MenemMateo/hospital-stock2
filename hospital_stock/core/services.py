@@ -305,18 +305,26 @@ def consumir_stock(stock, cantidad, motivo='', usuario=None):
     with transaction.atomic():
         stock.cantidad -= cantidad
         stock.full_clean()
-        stock.save()
+        
+        # Save related model fields to local variables for safe reference after deletion
+        med = stock.medicamento
+        mov = stock.movil
+        
+        if stock.cantidad == 0:
+            stock.delete()
+        else:
+            stock.save()
 
         # Si el motivo es vacío, generar uno por defecto descriptivo
-        descripcion_movimiento = f'Consumo de {cantidad} unidades de {stock.medicamento.nombre} en {stock.movil.nombre}'
+        descripcion_movimiento = f'Consumo de {cantidad} unidades de {med.nombre} en {mov.nombre}'
         if motivo:
             descripcion_movimiento += f' - Motivo: {motivo}'
 
         log_movimiento(
             tipo='salida',
-            medicamento=stock.medicamento,
+            medicamento=med,
             cantidad=cantidad,
-            movil=stock.movil,
+            movil=mov,
             descripcion=descripcion_movimiento,
             usuario=usuario,
         )
